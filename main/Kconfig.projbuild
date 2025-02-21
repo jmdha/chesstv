@@ -1,4 +1,4 @@
-menu "Program Configuration"
+menu "chessboard"
     config ESP_WIFI_SSID
         string "WiFi SSID"
         default "myssid"
