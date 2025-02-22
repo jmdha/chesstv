@@ -2,8 +2,10 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <nvs_flash.h>
+#include <stdio.h>
 
-#include <cb_wifi.h>
+#include "wifi.h"
+#include "stream.h"
 
 void init_nvs() {
   esp_err_t ret = nvs_flash_init();
@@ -19,7 +21,7 @@ void init_nvs() {
 void app_main(void) {
   init_nvs();
   cb_wifi_init();
-  while (1) {
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-  }
+  while (!cb_wifi_connnnected()) {}
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
+  xTaskCreate(cb_http_stream, "http_start", 4096, NULL, 10, NULL);
 }

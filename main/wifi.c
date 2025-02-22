@@ -1,21 +1,25 @@
 #include <esp_event.h>
 #include <freertos/event_groups.h>
-#include <cb_wifi.h>
 #include <esp_wifi.h>
+
+#include "wifi.h"
 
 #define SSID CONFIG_ESP_WIFI_SSID
 #define PASS CONFIG_ESP_WIFI_PASSWORD
 
 static EventGroupHandle_t s_wifi_event_group;
+static bool CONNECTED = false;
 
 static void event_handler(void *arg, esp_event_base_t event_base,
                           int32_t event_id, void *event_data) {
   if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+    CONNECTED = false;
     printf("disconnected from wifi\n");
     printf("attempting to reconnect\n");
     esp_wifi_connect();
   }
   if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_CONNECTED) {
+    CONNECTED = true;
     printf("connected to wifi\n");
   }
 }
@@ -52,5 +56,5 @@ void cb_wifi_init() {
 }
 
 bool cb_wifi_connnnected() {
-    return true;
+    return CONNECTED;
 }
