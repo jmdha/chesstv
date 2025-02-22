@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "src/wifi.c" 
-    INCLUDE_DIRS "include"
+    SRCS "cb_wifi.c" 
+    INCLUDE_DIRS "."
     PRIV_REQUIRES esp_event esp_wifi
 )

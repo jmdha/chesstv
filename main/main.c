@@ -3,7 +3,7 @@
 #include <freertos/task.h>
 #include <nvs_flash.h>
 
-#include <net/wifi.h>
+#include <cb_wifi.h>
 
 void init_nvs() {
   esp_err_t ret = nvs_flash_init();
@@ -18,7 +18,7 @@ void init_nvs() {
 
 void app_main(void) {
   init_nvs();
-  init_wifi();
+  cb_wifi_init();
   while (1) {
     vTaskDelay(1000 / portTICK_PERIOD_MS);
   }
