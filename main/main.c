@@ -4,6 +4,7 @@
 #include <nvs_flash.h>
 #include <stdio.h>
 
+#include "controller.h"
 #include "wifi.h"
 #include "stream.h"
 
@@ -17,11 +18,11 @@ void init_nvs() {
   ESP_ERROR_CHECK(ret);
 }
 
-
 void app_main(void) {
   init_nvs();
   cb_wifi_init();
   while (!cb_wifi_connnnected()) {}
   vTaskDelay(1000 / portTICK_PERIOD_MS);
-  xTaskCreate(cb_http_stream, "http_start", 4096, NULL, 10, NULL);
+  xTaskCreate(cb_stream_task,  "stream", 4096, NULL, 1, NULL);
+  xTaskCreate(cb_board_update, "board", 4096, NULL, 2, NULL);
 }

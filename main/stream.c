@@ -4,12 +4,15 @@
 
 #include "stream.h"
 #include "cJSON.h"
+#include "freertos/idf_additions.h"
 
 static const char *TAG = "cb_http";
 
 static bool NEW_GAME;
 static bool NEW_POSITION;
 static char FEN_BUF[128];
+
+static SemaphoreHandle_t SEMA = NULL;
 
 void cb_handle_data_event(char* data, int len) {
   cJSON* json = cJSON_ParseWithLength(data, len);
@@ -30,10 +33,13 @@ void cb_handle_data_event(char* data, int len) {
     ESP_LOGE(TAG, "Event data contains faulty fen");
     goto END;
   }
-  strcpy(FEN_BUF, fen->valuestring);
-  NEW_POSITION = true;
-  if (strcmp(type->valuestring, "featured") == 0)
-    NEW_GAME = true;
+  if (xSemaphoreTake(SEMA, 100) == pdTRUE) {
+    strcpy(FEN_BUF, fen->valuestring);
+    if (strcmp(type->valuestring, "featured") == 0)
+      NEW_GAME = true;
+    NEW_POSITION = true;
+    xSemaphoreGive(SEMA);
+  }
 END:
   cJSON_Delete(json);
 }
@@ -69,7 +75,7 @@ esp_err_t cb_http_event_handler(esp_http_client_event_t *evt) {
   return ESP_OK;
 }
 
-void cb_http_stream(void*) {
+void cb_stream_task(void*) {
     esp_http_client_handle_t client;
     esp_http_client_config_t config = {
         .url               = "https://lichess.org/api/tv/bullet/feed",
@@ -80,9 +86,24 @@ void cb_http_stream(void*) {
     };
     NEW_GAME     = false;
     NEW_POSITION = false;
+    SEMA = xSemaphoreCreateMutex();
     while (true) {
       client = esp_http_client_init(&config);
       esp_http_client_perform(client);
       esp_http_client_cleanup(client);
     }
+}
+
+bool cb_stream_board(char* fen, bool* new_game, bool* new_position) {
+  if (SEMA != NULL && xSemaphoreTake(SEMA, (TickType_t) 10) == pdTRUE) {
+    strcpy(fen, FEN_BUF);
+    *new_game = NEW_GAME;
+    *new_position = NEW_POSITION;
+    NEW_GAME = false;
+    NEW_POSITION = false;
+    xSemaphoreGive(SEMA);
+    return true;
+  } else {
+    return false;
+  }
 }
