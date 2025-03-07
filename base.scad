@@ -13,9 +13,6 @@ u_height=1.2;
 // Height of lower part of hole
 l_height=4.2;
 
-// Size of small beam around base
-beam=2;
-
 // Size of each square, should be higher than u_dim
 s_size=6;
 s_size_r=s_size/2;
@@ -24,16 +21,15 @@ s_size_r=s_size/2;
 count=8;
 
 // Padding around holes
-padding=2;
+padding=6;
 
 size=count*s_size+2*padding;
 height=h_offset+u_height+l_height;
 
 // display board
+union() {
 difference() {
-// base plate
-cube(size=[size, size, height]);
-// led holes
+cube(size=[size, size, height / 2]);
 translate([padding,padding,0])
 for (dx=[0:1:count - 1]) {
     for (dy=[0:1:count - 1]) {
@@ -46,45 +42,16 @@ for (dx=[0:1:count - 1]) {
         }
      }
 }
-// cover holes
-translate([padding, padding, h_offset])
-for (dx=[0:1:1]) {
-    for (dy=[0:1:1]) {
-        translate([dx*count*s_size, dy*count*s_size])
-        cylinder(h=height, r=1);
-     }
 }
-}
-
-// extension
-translate([size + 10, 0, 0])
-union() {
-// baseplate
+translate([padding, padding - 2, 0])
 difference() {
 // plate
-cube([size, size, 2]);
+cube([size - 2 * padding, 2, size]);
 //// esp
-translate([4, 8, -1])
-cube([2, 38, 20]);
-translate([28, 8, -1])
-cube([2, 38, 20]);
-// cutouts
-//// shift registers
-translate([28, 0, 0])
-for (dy=[0:1:1]) {
-    translate([8, 4 * (1 + dy) + 20 * dy, -1])
-    cube([0.8, 20, 20]);
-    translate([20, 4 * (1 + dy) + 20 * dy, -1])
-    cube([0.8, 20, 20]);
+translate([10, -1, height + 7.4])
+cube([2.5, 20, 38]);
+translate([35, -1, height + 7.4])
+cube([2.5, 20, 38]);
+}
 }
 
-}
-// legs
-//translate([padding, padding, 0])
-//for (dx=[0:1:1]) {
-//    for (dy=[0:1:1]) {
-//        translate([dx*count*s_size, dy*count*s_size])
-//        cylinder(h=2*height, r=0.9);
-//     }
-//}
-}
