@@ -1,6 +1,6 @@
 # chesstv (WIP)
 
-An ESP32 program for displaying live chess games from [Lichess.org](https://lichess.org) on an LED matrix. With the LED matrix being work in progress.
+An ESP32 program for displaying live chess games from [Lichess.org](https://lichess.org) on an LED matrix.
 
 ## Demo
 This shows it streaming and the debug output thereof.
