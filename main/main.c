@@ -20,6 +20,7 @@ void init_nvs() {
 
 void app_main(void) {
   init_nvs();
+  cb_board_init();
   cb_wifi_init();
   while (!cb_wifi_connnnected()) {}
   vTaskDelay(1000 / portTICK_PERIOD_MS);
