@@ -11,7 +11,11 @@ This shows it running with LED matrix.
 
 https://github.com/user-attachments/assets/b629fa63-cbdb-4b30-afac-c15997c00965
 
-
+## Components
+- 1 ESP32 with Wi-Fi component
+- 2 SNx4HC595 8-Bit Shift Registers
+- 3 150 Ohm resisters
+- Wires
 
 ## Schematic
-![s](https://github.com/user-attachments/assets/a260f215-58fb-4cb4-af0e-8e85c007e012)
+![s](https://github.com/user-attachments/assets/58d1932d-97d6-499f-a09c-e520ad353218)
