@@ -14,7 +14,8 @@ https://github.com/user-attachments/assets/b629fa63-cbdb-4b30-afac-c15997c00965
 ## Components
 - 1 ESP32 with Wi-Fi component
 - 2 SNx4HC595 8-Bit Shift Registers
-- 3 150 Ohm resisters
+- 8x8 LED Matrix
+- 3 150 Ohm resistors
 - Wires
 
 ## Schematic
