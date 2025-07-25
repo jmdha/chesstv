@@ -18,7 +18,7 @@ void init_nvs() {
 void app_main(void) {
 	init_nvs();
 	cb_board_init();
-	cb_wifi_init();
+	wifi_init();
 	xTaskCreate(cb_stream_task,  "stream", 4096, NULL, 1, NULL);
 	xTaskCreate(cb_board_update, "board",  4096, NULL, 2, NULL);
 }
