@@ -9,7 +9,7 @@
 #define PASS CONFIG_ESP_WIFI_PASSWORD
 #define AUTH WIFI_AUTH_WPA2_PSK
 
-const char *TAG = "wifi";
+static const char *TAG = "wifi";
 
 bool CONNECTED;
 EventGroupHandle_t EVENT_GROUP;

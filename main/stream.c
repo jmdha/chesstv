@@ -6,7 +6,7 @@
 #include "cJSON.h"
 #include "freertos/idf_additions.h"
 
-static const char *TAG = "cb_http";
+static const char* TAG = "stream";
 
 static bool NEW_GAME;
 static bool NEW_POSITION;
@@ -95,7 +95,7 @@ void cb_stream_task(void*) {
 }
 
 bool cb_stream_board(char* fen, bool* new_game, bool* new_position) {
-  if (SEMA != NULL && xSemaphoreTake(SEMA, (TickType_t) 10) == pdTRUE) {
+  if (SEMA != NULL && xSemaphoreTake(SEMA, (TickType_t) 1) == pdTRUE) {
     strcpy(fen, FEN_BUF);
     *new_game = NEW_GAME;
     *new_position = NEW_POSITION;
