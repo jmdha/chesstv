@@ -34,29 +34,23 @@ void ctv_print(const position_t* pos) {
     ESP_LOGI("ctv_display", "%.*s", 80, buf);
 }
 
-void cb_board_light(int x, int y) {
-	for (int i = 0; i < 8; i++) {
-		const bool val = i == x;
-		gpio_set_level(SER, val);
-		gpio_set_level(SRCLK, 0);
-		gpio_set_level(SRCLK, 1);
-	}
-	for (int i = 0; i < 8; i++) {
-		const bool val = i != y;
-		gpio_set_level(SER, val);
-		gpio_set_level(SRCLK, 0);
-		gpio_set_level(SRCLK, 1);
-	}
-}
-
 void cb_board_display(const position_t* pos) {
-	for (int x = 0; x < 8; x++)
-		for (int y = 0; y < 8; y++)
-			if (position_is_set(pos, x, y)) {
-				cb_board_light(x, y);
-				gpio_set_level(RCLK, 0);
-				gpio_set_level(RCLK, 1);
-			}
+	for (int p = 0; p < 8; p++) {
+		for (int p_ = 0; p_ < 8; p_++) {
+			gpio_set_level(SER, p == p_);
+			gpio_set_level(SRCLK, 0);
+			gpio_set_level(SRCLK, 1);
+		}
+		for (int n = 0; n < 8; n++) {
+			bool val = position_is_set(pos, p, n);
+			gpio_set_level(SER, !val);
+			gpio_set_level(SRCLK, 0);
+			gpio_set_level(SRCLK, 1);
+		}
+		gpio_set_level(RCLK, 0);
+		gpio_set_level(RCLK, 1);
+	}
+
 }
 
 void cb_board_update(void*) {
@@ -68,7 +62,7 @@ void cb_board_update(void*) {
       if (cb_stream_board(fen, &new_game, &new_position) && new_position)
         position_load(pos, fen);
       if (pos)
-	      cb_board_display(pos);
+	cb_board_display(pos);
   }
   position_free(pos);
 }
